@@ -29,19 +29,19 @@
                     <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
                         <div class="card bg-glass" style="width: 28vw;">
                             <div class="card-body px-4 py-5 px-md-5">
-                                <form>
+                                <form method="POST" action="traitement.php">
                                     <!-- Email input -->
                                     <div class="form-outline mb-4">
-                                        <input type="email" id="form3Example3" class="form-control" placeholder="Email address"/>
+                                        <input type="email" name="emailConn" class="form-control" placeholder="Email address"/>
                                     </div>
 
                                     <!-- Password input -->
                                     <div class="form-outline mb-4">
-                                        <input type="password" id="form3Example4" class="form-control" placeholder="Password"/>
+                                        <input type="password" name="mdpConn" class="form-control" placeholder="Password"/>
                                     </div>
 
                                     <!-- Submit button -->
-                                    <button type="submit" class="btn btn-block mb-4" style="background-color: hsl(218, 81%, 85%);">
+                                    <button type="submit" name="submitConn" class="btn btn-block mb-4" style="background-color: hsl(218, 81%, 85%);">
                                         Se connecter
                                     </button>
                                     <!-- inscription button -->
@@ -69,36 +69,36 @@
                     </div>
                     <div class="modal-body">
                         <div class="popup" id="popup">
-                        <form method="post" action="#">
-                            <input type="radio" id="admin" name="userType" value="admin">
+                        <form method="POST" action="traitement.php">
+                            <input type="radio" id="admin" name="role" value="admin">
                             <label for="admin">Admin</label>
 
-                            <input type="radio" id="client" name="userType" value="client">
+                            <input type="radio" id="client" name="role" value="client">
                             <label for="client">Client</label>
                             <div class="d-flex ">
                                 <!-- Nom input -->
                                 <div class="form-outline mb-4 col-md-6">
-                                    <input type="text" id="form3Example1" class="form-control" placeholder="Nom"/>
+                                    <input type="text" name="nom" class="form-control" placeholder="Nom"/>
                                 </div>
                                 <!-- Prénom input -->
                                 <div class="form-outline mb-4 col-md-6">
-                                    <input type="text" id="form3Example2" class="form-control"  placeholder="Prénom"/>
+                                    <input type="text" name="prenom" class="form-control"  placeholder="Prénom"/>
                                 </div>
                             </div>
 
                             <!-- Email input -->
                             <div class="form-outline mb-4  d-flex justify-content-center">
-                                <input type="email" id="form3Example3" class="form-control" style="width: 28.5vw;" placeholder="Email address"/>
+                                <input type="email" name="emailInsc" class="form-control" style="width: 28.5vw;" placeholder="Email address"/>
                             </div>
 
                             <!-- Password input -->
                             <div class="form-outline mb-4 d-flex justify-content-center">
-                                <input type="password" id="form3Example4" class="form-control" style="width: 28.5vw;" placeholder="Password"/>
+                                <input type="password" name="mdpInsc" class="form-control" style="width: 28.5vw;" placeholder="Password"/>
                             </div>
 
                             <!-- Submit button -->
                             <div class="form-outline mb-4  d-flex justify-content-center">
-                                <button type="submit" class="btn btn-block mb-4 mt-2" style="background-color: #3C873B; color:aliceblue ;  width: 28.5vw;">
+                                <button type="submit" name="submitInsc" class="btn btn-block mb-4 mt-2" style="background-color: #3C873B; color:aliceblue ;  width: 28.5vw;">
                                     S'inscrire
                                 </button>
                             </div>
@@ -114,18 +114,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <script>
-        function openInscriptionModal() {
-            document.getElementById('inscriptionModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        function closeInscriptionModal() {
-            document.getElementById('inscriptionModal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-    </script>
+    <script src="javascripte.js"></script>
 
 </body>
 </html>
