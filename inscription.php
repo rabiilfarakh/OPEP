@@ -17,7 +17,8 @@ if (isset($_POST['submitInsc'])) {
             $lastUserId = $conn->insert_id;
             header("Location: role.php?id=$lastUserId");
         }
-    }
+    } else 
+        echo "<script>alert('Remplir tous les champs')</script>";
    
 }
 
@@ -37,7 +38,7 @@ if (isset($_POST['submitInsc'])) {
     <title>Document</title>
 </head>
 
-<body style="background-color: #567255  ">
+<body style="background-color: #31572C ">
     <section class="sec1 ">
         <div class="overlay" id="overlay"></div>
         <!-- Section: Design Block -->
@@ -82,7 +83,7 @@ if (isset($_POST['submitInsc'])) {
                                 </div>
 
                                 <!-- Submit button -->
-                                <button type="submit" name="submitInsc" id="submitInsc" class="btn btn-block mb-4" style="background-color: #567255; color:white" >
+                                <button type="submit" name="submitInsc" id="submitInsc" class="btn btn-block mb-4" style="background-color: #31572C; color:white" >
                                     S'inscrire
                                 </button>
 

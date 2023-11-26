@@ -92,7 +92,7 @@ a{
 } */
 
 a.active{
-    background: #45a049;
+    background: #333;
     color: var(--hover-text-color);
 }
 

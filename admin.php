@@ -92,7 +92,7 @@ if (isset($_POST['submitModificationCategorie'])) {
 </head>
 <body class="body">
     <section class="header">
-        <h1><span style="color: #45a049;">O</span>P<span style="color: #45a049;">E</span>P</h1>
+        <h1><span style="color: #567255;">O</span>P<span style="color: #567255;">E</span>P</h1>
     </section>
     <section class="main">
         <div class="sidebar">

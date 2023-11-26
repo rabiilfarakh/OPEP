@@ -50,7 +50,7 @@ if (isset($_POST['submitConn'])) {
     <title>Document</title>
 </head>
 
-<body style="background-color: #567255  ">
+<body style="background-color: #31572C ">
     <section class="sec1 ">
         <div class="overlay" id="overlay"></div>
         <!-- Section: Design Block -->
@@ -85,7 +85,7 @@ if (isset($_POST['submitConn'])) {
                                 </div>
 
                                 <!-- Submit button -->
-                                <button type="submit" name="submitConn" id="submitConnBtn" class="btn btn-block mb-4" style="color:white; background-color: #567255;" onclick="validateAndSubmitConnForm()">
+                                <button type="submit" name="submitConn" id="submitConnBtn" class="btn btn-block mb-4" style="color:white; background-color: #31572C;" onclick="validateAndSubmitConnForm()">
                                     Se connecter
                                 </button>
 

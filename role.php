@@ -30,7 +30,7 @@ if (isset($_POST['submitRole'])) {
     <title>Document</title>
 </head>
 
-<body style="background-color: #567255  ">
+<body style="background-color: #31572C  ">
     <section class="sec1 ">
         <div class="overlay" id="overlay"></div>
         <!-- Section: Design Block -->
@@ -53,14 +53,14 @@ if (isset($_POST['submitRole'])) {
                         <div class="card-body px-4 py-5 px-md-5">
 
                             <!-- --------------------------------------------------Form_Role -------------------------------------------->
-                            <form  method="post">
+                            <form  method="post" class="d-flex  flex-column   justify-content-center">
                             <label for="role">Sélectionnez un rôle :</label>
-                            <select name="role" id="role">
+                            <select name="role" id="role" style="height: 2.5VW;">
                                 <option value="client">Client</option>
                                 <option value="admin">Admin</option>
                             </select>
 
-                            <button type="submit" name="submitRole">Terminer</button>
+                            <button type="submit" name="submitRole" class="btn btn-block mb-4 mt-4" style="color:white; background-color: #31572C; width: 12VW">Terminer</button>
                         </form>
                             <!-- ------------------------------------------------------Fin ------------------------------------------------------------->
 
