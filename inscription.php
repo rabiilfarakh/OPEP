@@ -2,36 +2,23 @@
 
 include("traitement.php") ;
 
-//-------------------------------- Connection-----------------------------------------
-if (isset($_POST['submitConn'])) {
-    $emailConn = $_POST["emailConn"];
-    $mdpConn = $_POST["mdpConn"];
+//-------------------------------- INSCRIPTION-----------------------------------------
+if (isset($_POST['submitInsc'])) {
 
-    if (!empty($emailConn) && !empty($mdpConn)) {
-        $query = "SELECT r.nomRole
-        FROM utilisateurs u
-        JOIN roles r ON u.idUtl = r.idUtl
-        WHERE u.emailUtl = '$emailConn' AND u.mdpUtl = '$mdpConn'";
+    $nom = $_POST["nomInsc"];
+    $prenom = $_POST["prenomInsc"];
+    $email = $_POST["emailInsc"];
+    $mdp = $_POST["mdpInsc"];
+    
+    if (!empty($email) && !empty($mdp) && !empty($nom) && !empty($prenom)) {
+        $query = "INSERT INTO utilisateurs (emailUtl,mdpUtl,nomUtl,prenomUtl) VALUES ('$email','$mdp','$nom','$prenom')";
         $result = $conn->query($query);
-
-        if ($result->num_rows > 0) {
-            // Récupérer directement le rôle
-            $nomRole = $result->fetch_assoc()['nomRole'];
-
-            // Rediriger en fonction du rôle
-            if ($nomRole == "client") {
-                header("Location: client.php");
-            } else if ($nomRole == "admin") {
-                header("Location: admin.php");
-            } else {
-                echo "<script>alert('Rôle inconnu')</script>";
-            }
-        } else {
-            echo "<script>alert('Email ou mot de passe incorrect')</script>";
+        if($result){
+            $lastUserId = $conn->insert_id;
+            header("Location: role.php?id=$lastUserId");
         }
-    } else {
-        echo "<script>alert('Remplir tous les champs')</script>";
     }
+   
 }
 
 
@@ -72,26 +59,36 @@ if (isset($_POST['submitConn'])) {
                     <div class="card bg-glass" style="width: 28vw;">
                         <div class="card-body px-4 py-5 px-md-5">
 
-                            <!-- --------------------------------------------------Form_Connection -------------------------------------------->
-                            <form method="POST" id="inscriptionForm">
+                            <!-- --------------------------------------------------Form_Inscription -------------------------------------------->
+                            <form method="POST" id="_______inscriptionForm2">
+                                <!-- nom input -->
+                                <div class="form-outline mb-4">
+                                    <input type="text" name="nomInsc" class="form-control" placeholder="Nom" />
+                                </div>
+
+                                <!-- prenom input -->
+                                <div class="form-outline mb-4">
+                                    <input type="text" name="prenomInsc" class="form-control" placeholder="Prenom" />
+                                </div>
+                                
                                 <!-- Email input -->
                                 <div class="form-outline mb-4">
-                                    <input type="email" name="emailConn" class="form-control" placeholder="Email address" />
+                                    <input type="email" name="emailInsc" class="form-control" placeholder="Email address" />
                                 </div>
 
                                 <!-- Password input -->
                                 <div class="form-outline mb-4">
-                                    <input type="password" name="mdpConn" class="form-control" placeholder="Password" />
+                                    <input type="password" name="mdpInsc" class="form-control" placeholder="Password" />
                                 </div>
 
                                 <!-- Submit button -->
-                                <button type="submit" name="submitConn" id="submitConnBtn" class="btn btn-block mb-4" style="color:white; background-color: #567255;" onclick="validateAndSubmitConnForm()">
-                                    Se connecter
+                                <button type="submit" name="submitInsc" id="submitInsc" class="btn btn-block mb-4" style="background-color: #567255; color:white" >
+                                    S'inscrire
                                 </button>
 
                                 <!-- Inscription button -->
-                                <a href="inscription.php">
-                                    S'inscrire
+                                <a href="connection.php" >
+                                    Se connecter
                                 </a>
                             </form>
                             <!-- ------------------------------------------------------Fin ------------------------------------------------------------->

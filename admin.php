@@ -1,3 +1,43 @@
+<?php
+
+require_once "traitement.php";
+
+// Assurez-vous que la méthode de soumission est POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Vérifiez si le formulaire d'ajout de plante est soumis
+    if (isset($_POST['submitPlante'])) {
+        // Récupérez les données du formulaire
+        $nomPlante = $_POST['nomPlante'];
+        $imagePlante = $_POST['imagePlante'];
+        $descriptionPlante = $_POST['descriptionPlante'];
+        $stockPlante = $_POST['stockPlante'];
+        $prixFr = $_POST['prixFr'];
+
+        // Validez les données au besoin
+
+        // Effectuez la connexion à la base de données
+
+        // Préparez la requête d'insertion dans la table plantes
+        $query = $conn->prepare("INSERT INTO plantes (nomPlante, imagePlante, descriptionPlante, stockPlante, prixFr) VALUES (?, ?, ?, ?, ?)");
+        $query->bind_param("sssis", $nomPlante, $imagePlante, $descriptionPlante, $stockPlante, $prixFr);
+
+        // Exécutez la requête
+        if ($query->execute()) {
+            echo "Plante ajoutée avec succès.";
+        } else {
+            echo "Erreur lors de l'ajout de la plante. Veuillez réessayer.";
+        }
+
+        // Fermez la connexion
+        $conn->close();
+    }
+}
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,60 +51,35 @@
 </head>
 <body class="body">
     <section class="header">
-        <div class="logo">
-            <i class="ri-menu-line menu"></i>
-            <h2><span>VM</span> Store.</h2>
-        </div>
+        <h1><span style="color: var(--bg-color-third);">O</span>P<span style="color: var(--bg-color-third);">E</span>P</h1>
     </section>
     <section class="main">
         <div class="sidebar">
             <ul class="sidebar--items">
                 <li>
                     <a href="#" class="active">
-                        <span class="icon"><i class="ri-bar-chart-line"></i></span>
-                        <div class="sidebar--item">Overview</div>
+                        <div class="sidebar--item">Ajouter Catégorie</div>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <span class="icon"><i class="ri-handbag-line"></i></span>
-                        <div class="sidebar--item">Product</div>
+                        <div class="sidebar--item">Modifier Catégorie</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="afficherFormulaireAjoutPlante()">
+                        <div class="sidebar--item">Ajouter Plante</div>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <span class="icon"><i class="ri-user-line"></i></span>
-                        <div class="sidebar--item">Customers</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><i class="ri-booklet-line"></i></span>
-                        <div class="sidebar--item">Orders</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><i class="ri-shopping-cart-2-line"></i></span>
-                        <div class="sidebar--item">Checkout</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><i class="ri-settings-3-line"></i></span>
-                        <div class="sidebar--item">Settings</div>
+                        <div class="sidebar--item">Supprimer Plante</div>
                     </a>
                 </li>
             </ul>
             <ul class="sidebar--bottom--items">
                 <li>
-                    <a href="#">
-                        <span class="icon"><i class="ri-question-line"></i></span>
-                        <div class="sidebar--item">Help</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
+                    <a href="connection.php">
                         <span class="icon"><i class="ri-logout-box-r-line"></i></span>
                         <div class="sidebar--item">Logout</div>
                     </a>
@@ -72,170 +87,41 @@
             </ul>
         </div>
         <div class="main--container">
-            <div class="section--title">
-                <h3 class="title">Welcome back, Jenny</h3>
-                <select name="date" id="date">
-                    <option value="last7">Last 7 days</option>
-                    <option value="lastmonth">Last month</option>
-                    <option value="lastyear">Last year</option>
-                    <option value="alltime">All time</option>
-                </select>
-            </div>
-            <div class="cards">
-                <div class="card card-1">
-                    <div class="card--title">
-                        <span class="card--icon icon"><i class="ri-shopping-bag-2-line"></i></span>
-                        <span>Sales</span>
-                    </div>
-                    <h3 class="card--value">$432,576.34 <i class="ri-arrow-up-circle-fill up"></i></h3>
-                    <h5 class="more">4,234 more than usual</h5>
-                    <div class="chart">
-                        <canvas id="sales"></canvas>
-                    </div>
-                </div>
-                <div class="card card-2">
-                    <div class="card--title">
-                        <span class="card--icon icon"><i class="ri-gift-line"></i></span>
-                        <span>Orders</span>
-                    </div>
-                    <h3 class="card--value">2,567 <i class="ri-arrow-down-circle-fill down"></i></h3>
-                    <h5 class="less">234 less than usual</h5>
-                    <div class="chart">
-                        <canvas id="orders"></canvas>
-                    </div>
-                </div>
-                <div class="card card-3">
-                    <div class="card--title">
-                        <span class="card--icon icon"><i class="ri-handbag-line"></i></span>
-                        <span>Products</span>
-                    </div>
-                    <h3 class="card--value">587 <i class="ri-arrow-up-circle-fill up"></i></h3>
-                    <h5 class="more">23 more than usual</h5>
-                    <div class="chart">
-                        <canvas id="products"></canvas>
-                    </div>
-                </div>
-                <div class="card card-4">
-                    <div class="card--title">
-                        <span class="card--icon icon"><i class="ri-user-line"></i></span>
-                        <span>Customers</span>
-                    </div>
-                    <h3 class="card--value">4,300 <i class="ri-arrow-down-circle-fill down"></i></h3>
-                    <h5 class="less">34 less than usual</h5>
-                    <div class="chart">
-                        <canvas id="customers"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="target-vs-sales--container">
-                <div class="section--title">
-                    <h3 class="title">Sales difference</h3>
-                    <div class="sales--value">
-                        <div class="target">
-                            <i class="ri-checkbox-blank-circle-fill circle"></i>
-                            Target <span>&nbsp; sales</span>
-                        </div>
-                        <div class="current">
-                            <i class="ri-checkbox-blank-circle-fill circle"></i>
-                            Current <span>&nbsp; sales</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="target--vs--sales">
-                    <canvas id="tarsale"></canvas>
-                </div>
-            </div>
-            <div class="table">
-                <div class="section--title">
-                    <h3 class="title">Top products</h3>
-                    <div></div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product name</th>
-                            <th>Order ID</th>
-                            <th>Price</th>
-                            <th>Sold</th>
-                            <th>Returned</th>
-                            <th>Sales</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                        <tr>
-                            <td>MacBook Air AAPL</td>
-                            <td>#231234</td>
-                            <td>$1846</td>
-                            <td>331</td>
-                            <td>12</td>
-                            <td>$337,218.54</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="form-container" id="formContainer">
+                <!-- Ici, le formulaire apparaîtra après le clic sur "Ajouter Plante" -->
             </div>
         </div>
     </section>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/sales.js"></script>
-    <script src="assets/js/orders.js"></script>
-    <script src="assets/js/products.js"></script>
-    <script src="assets/js/customers.js"></script>
-    <script src="assets/js/tarsale.js"></script>
+
+    <script>
+        function afficherFormulaireAjoutPlante() {
+            var formContainer = document.getElementById("formContainer");
+            formContainer.innerHTML = `
+                <h2>Ajouter Plante</h2>
+                <form method="POST" action="traitement.php">
+                    <!-- Ajoutez les champs nécessaires pour l'ajout de la plante -->
+                    <!-- Exemple : -->
+                    <label for="nomPlante">Nom de la Plante:</label>
+                    <input type="text" id="nomPlante" name="nomPlante" required><br>
+
+                    <label for="imagePlante">Image de la Plante (URL):</label>
+                    <input type="url" id="imagePlante" name="imagePlante" required><br>
+
+                    <label for="descriptionPlante">Description:</label>
+                    <textarea id="descriptionPlante" name="descriptionPlante" required></textarea><br>
+
+                    <label for="stockPlante">Stock:</label>
+                    <input type="number" id="stockPlante" name="stockPlante" required><br>
+
+                    <label for="prixFr">Prix (en Francs CFA):</label>
+                    <input type="number" id="prixFr" name="prixFr" required><br>
+
+                    <!-- ... Ajoutez d'autres champs si nécessaire ... -->
+
+                    <button type="submit" name="submitPlante">Ajouter</button>
+                </form>
+            `;
+        }
+    </script>
 </body>
 </html>
