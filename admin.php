@@ -2,37 +2,78 @@
 
 require_once "traitement.php";
 
-// Assurez-vous que la méthode de soumission est POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Vérifiez si le formulaire d'ajout de plante est soumis
-    if (isset($_POST['submitPlante'])) {
-        // Récupérez les données du formulaire
-        $nomPlante = $_POST['nomPlante'];
-        $imagePlante = $_POST['imagePlante'];
-        $descriptionPlante = $_POST['descriptionPlante'];
-        $stockPlante = $_POST['stockPlante'];
-        $prixFr = $_POST['prixFr'];
+// Ajout de Plante
+if (isset($_POST['submitPlante'])) {
 
-        // Validez les données au besoin
+    $nomPlante = $_POST['nomPlante'];
+    $imagePlante = $_POST['imagePlante'];
+    $descriptionPlante = $_POST['descriptionPlante'];
+    $stockPlante = $_POST['stockPlante'];
+    $prix = $_POST['prix'];
+    $idCategorie = $_POST['idCategorie']; // Ajout de cette ligne
 
-        // Effectuez la connexion à la base de données
+    $query ="INSERT INTO plantes (nomPlante, imagePlante, descriptionPlante, stock, prix, idCategorie) VALUES ('$nomPlante','$imagePlante' ,'$descriptionPlante','$stockPlante','$prix','$idCategorie')";
+    $result = $conn->query($query);
 
-        // Préparez la requête d'insertion dans la table plantes
-        $query = $conn->prepare("INSERT INTO plantes (nomPlante, imagePlante, descriptionPlante, stockPlante, prixFr) VALUES (?, ?, ?, ?, ?)");
-        $query->bind_param("sssis", $nomPlante, $imagePlante, $descriptionPlante, $stockPlante, $prixFr);
+    if ($result) {
+        echo "<script>alert('Plante ajoutée avec succès.')</script>";
+    } else {
+        echo "<script>alert('Erreur lors de l'ajout de la plante. Veuillez réessayer.')</script>";
+    }
+}
 
-        // Exécutez la requête
-        if ($query->execute()) {
-            echo "Plante ajoutée avec succès.";
+
+
+
+// Ajout de catégorie
+if (isset($_POST['submitCategorie'])) {
+    
+    $nomCategorie = $_POST['nomCategorie'];
+   
+    $query = "INSERT INTO categories (nomCategorie) VALUES ('$nomCategorie')";
+    $result = $conn->query($query);
+ 
+
+        if ($result) {
+            echo "<script>alert('Catégorie ajoutée avec succès.')</script>";
         } else {
-            echo "Erreur lors de l'ajout de la plante. Veuillez réessayer.";
+            echo "<script>alert('Erreur lors de l'ajout de la catégorie. Veuillez réessayer.')</script>";
         }
 
-        // Fermez la connexion
-        $conn->close();
+}
+
+
+// Suppression de plante
+if (isset($_POST['submitSuppressionPlante'])) {
+    $idPlanteSuppression = $_POST['idPlanteSuppression'];
+
+    $query = "DELETE FROM plantes WHERE idPlante = '$idPlanteSuppression'";
+    $result = $conn->query($query);
+
+    if ($result) {
+        echo "<script>alert('Plante supprimée avec succès.')</script>";
+    } else {
+        echo "<script>alert('Erreur lors de la suppression de la plante. Veuillez réessayer.')</script>";
+    }
+}
+
+
+// Modification de catégorie
+if (isset($_POST['submitModificationCategorie'])) {
+    $idCategorieModification = $_POST['idCategorieModification'];
+    $nouveauNomCategorie = $_POST['nouveauNomCategorie'];
+
+    $query = "UPDATE categories SET nomCategorie = '$nouveauNomCategorie' WHERE idCategorie = '$idCategorieModification'";
+    $result = $conn->query($query);
+
+    if ($result) {
+        echo "<script>alert('Catégorie modifiée avec succès.')</script>";
+    } else {
+        echo "<script>alert('Erreur lors de la modification de la catégorie. Veuillez réessayer.')</script>";
     }
 }
 ?>
+
 
 
 
@@ -47,23 +88,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styleAdmin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <title>VM store.</title>
+    <title>OPEP</title>
 </head>
 <body class="body">
     <section class="header">
-        <h1><span style="color: var(--bg-color-third);">O</span>P<span style="color: var(--bg-color-third);">E</span>P</h1>
+        <h1><span style="color: #45a049;">O</span>P<span style="color: #45a049;">E</span>P</h1>
     </section>
     <section class="main">
         <div class="sidebar">
             <ul class="sidebar--items">
                 <li>
-                    <a href="#" class="active">
+                    <a href="#"  onclick="afficherFormulaireAjoutCategorie()">
                         <div class="sidebar--item">Ajouter Catégorie</div>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <div class="sidebar--item">Modifier Catégorie</div>
+                        <div class="sidebar--item" onclick="afficherFormulaireModificationCategorie()">Modifier Catégorie</div>
                     </a>
                 </li>
                 <li>
@@ -73,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </li>
                 <li>
                     <a href="#">
-                        <div class="sidebar--item">Supprimer Plante</div>
+                        <div class="sidebar--item" onclick="afficherFormulaireSuppressionPlante()">Supprimer Plante</div>
                     </a>
                 </li>
             </ul>
@@ -93,35 +134,139 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </section>
 
-    <script>
-        function afficherFormulaireAjoutPlante() {
-            var formContainer = document.getElementById("formContainer");
-            formContainer.innerHTML = `
-                <h2>Ajouter Plante</h2>
-                <form method="POST" action="traitement.php">
-                    <!-- Ajoutez les champs nécessaires pour l'ajout de la plante -->
-                    <!-- Exemple : -->
-                    <label for="nomPlante">Nom de la Plante:</label>
-                    <input type="text" id="nomPlante" name="nomPlante" required><br>
+    <!-- ... Votre code JavaScript existant ... -->
 
-                    <label for="imagePlante">Image de la Plante (URL):</label>
-                    <input type="url" id="imagePlante" name="imagePlante" required><br>
+<script>
+    // ----------------------------------------------FormulaireAjoutPlante------------------------------------
+    function afficherFormulaireAjoutPlante() {
+        var formContainer = document.getElementById("formContainer");
+        formContainer.innerHTML = `
+            <div class="close-button" onclick="fermerFormulaireAjoutPlante()">X</div>
+            <h2>Ajouter Plante</h2>
+            <form method="POST"  >
 
-                    <label for="descriptionPlante">Description:</label>
-                    <textarea id="descriptionPlante" name="descriptionPlante" required></textarea><br>
+                <label for="idCategorie">Catégorie :</label>
+                <select id="idCategorie" name="idCategorie" required>
+                    <?php
+                    // Récupérer les catégories depuis la base de données
+                    $categoriesQuery = $conn->query("SELECT * FROM categories");
 
-                    <label for="stockPlante">Stock:</label>
-                    <input type="number" id="stockPlante" name="stockPlante" required><br>
+                    while ($categorie = $categoriesQuery->fetch_assoc()) {
+                        echo "<option value='{$categorie['idCategorie']}'>{$categorie['nomCategorie']}</option>";
+                    }
+                    ?>
+                </select><br>
+                <label for="nomPlante">Nom de la Plante:</label>
+                <input type="text" id="nomPlante" name="nomPlante" required><br>
 
-                    <label for="prixFr">Prix (en Francs CFA):</label>
-                    <input type="number" id="prixFr" name="prixFr" required><br>
+                <label for="imagePlante">Image de la Plante (URL):</label>
+                <input type="url" id="imagePlante" name="imagePlante" required><br>
 
-                    <!-- ... Ajoutez d'autres champs si nécessaire ... -->
+                <label for="descriptionPlante">Description:</label>
+                <textarea id="descriptionPlante" name="descriptionPlante" required></textarea><br>
 
-                    <button type="submit" name="submitPlante">Ajouter</button>
-                </form>
-            `;
-        }
-    </script>
+                <label for="stockPlante">Stock:</label>
+                <input type="number" id="stockPlante" name="stockPlante" required><br>
+
+                <label for="prixFr">Prix (en Francs CFA):</label>
+                <input type="number" id="prixFr" name="prix" required><br>
+
+                <!-- ... Ajoutez d'autres champs si nécessaire ... -->
+
+                <button type="submit" name="submitPlante">Ajouter</button>
+            </form>
+        `;
+    }
+
+  // ----------------------------------------------FormulaireAjoutCategorie------------------------------------
+    function afficherFormulaireAjoutCategorie() {
+        var formContainer = document.getElementById("formContainer");
+        formContainer.innerHTML = `
+            <div class="close-button" onclick="fermerFormulaireAjoutCategorie()">X</div>
+            <h2>Ajouter Catégorie</h2>
+            <form method="POST">
+                <label for="nomCategorie">Nom de la Catégorie:</label>
+                <input type="text" id="nomCategorie" name="nomCategorie" required><br>
+                <button type="submit" name="submitCategorie">Ajouter</button>
+            </form>
+        `;
+    }
+
+// ----------------------------------------------FormulaireSupprimerPlante------------------------------------
+    function afficherFormulaireSuppressionPlante() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = `
+        <div class="close-button" onclick="fermerFormulaireSuppressionPlante()">X</div>
+        <h2>Supprimer Plante</h2>
+        <form method="POST">
+            <label for="idPlanteSuppression">Sélectionnez la plante à supprimer :</label>
+            <select id="idPlanteSuppression" name="idPlanteSuppression" class="form-control" required>
+                <?php
+
+                $plantesQuery = $conn->query("SELECT * FROM plantes");
+
+                while ($plante = $plantesQuery->fetch_assoc()) {
+                    echo "<option value='{$plante['idPlante']}'>{$plante['nomPlante']}</option>";
+                }
+                ?>
+            </select><br>
+            <button id="bttn" type="submit" name="submitSuppressionPlante">Supprimer</button>
+        </form>
+    `;
+}
+
+// ----------------------------------------------FormulaireModiferCategorie------------------------------------
+function afficherFormulaireModificationCategorie() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = `
+        <div class="close-button" onclick="fermerFormulaireModificationCategorie()">X</div>
+        <h2>Modifier Catégorie</h2>
+        <form method="POST">
+            <label for="idCategorieModification">Sélectionnez la catégorie à modifier :</label>
+            <select id="idCategorieModification" name="idCategorieModification" class="form-control" required>
+                <?php
+                // Récupérer les catégories depuis la base de données
+                $categoriesQuery = $conn->query("SELECT * FROM categories");
+
+                while ($categorie = $categoriesQuery->fetch_assoc()) {
+                    echo "<option value='{$categorie['idCategorie']}'>{$categorie['nomCategorie']}</option>";
+                }
+                ?>
+            </select><br>
+            <label for="nouveauNomCategorie">Nouveau nom de la catégorie :</label>
+            <input type="text" id="nouveauNomCategorie" name="nouveauNomCategorie" class="form-control" required><br>
+            <button type="submit" name="submitModificationCategorie">Modifier</button>
+        </form>
+    `;
+}
+
+//****************************************************************************************************************** */
+function fermerFormulaireModificationCategorie() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = "";
+}
+
+
+function fermerFormulaireSuppressionPlante() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = "";
+}
+
+
+function fermerFormulaireAjoutPlante() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = ""; 
+}
+
+
+function fermerFormulaireAjoutCategorie() {
+    var formContainer = document.getElementById("formContainer");
+    formContainer.innerHTML = ""; 
+}
+
+</script>
+
+<!-- ... Votre code JavaScript existant ... -->
+
 </body>
 </html>
