@@ -58,7 +58,8 @@ function validateConnForm() {
 // }
 
 
-
+{/* <nav class="navbar navbar-expand-lg bg-body-tertiary" style="border:1px solid white; border-radius:20px; width:40%;">
+<div class="container-fluid "style="dispaly:flex; gap:1.3vw"> */}
 
 
 

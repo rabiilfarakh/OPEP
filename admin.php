@@ -160,7 +160,7 @@ if (isset($_POST['submitModificationCategorie'])) {
                 <input type="text" id="nomPlante" name="nomPlante" required><br>
 
                 <label for="imagePlante">Image de la Plante (URL):</label>
-                <input type="url" id="imagePlante" name="imagePlante" required><br>
+                <input type="text" id="imagePlante" name="imagePlante" required><br>
 
                 <label for="descriptionPlante">Description:</label>
                 <textarea id="descriptionPlante" name="descriptionPlante" required></textarea><br>

@@ -1,4 +1,7 @@
-d<!DOCTYPE html>
+
+
+<?php include("traitement.php"); ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,19 +36,22 @@ d<!DOCTYPE html>
             margin-top: 2rem;
         }
 
-        .sec2 .card {
+        .sec3 .card {
+            height: 26vw;
             margin-bottom: 1.5rem;
-            color: black; /* Couleur du texte pour la carte */
+            color: black; 
             max-width: 19.5rem;
-            background-color: rgba(255, 255, 255, 0.6); /* Fond de la carte semi-transparent */
-            text-align: center; /* Centrer le texte */
+            background-color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 20px;
         }
 
         .card-img-custom {
-            width: 40%; /* La largeur de l'image est maintenant fixée à 100% de la largeur de son conteneur parent */
-            height: 12vw; /* Ajustez la hauteur des images selon vos préférences */
+            width: 40%;
+            height: 10vw;
             object-fit: cover;
-            border-radius: 8px; /* Ajouter des coins arrondis à l'image */
+            border-radius: 8px;
         }
 
         .card-body {
@@ -53,30 +59,36 @@ d<!DOCTYPE html>
         }
 
         .card-text {
-            margin-bottom: 1rem; /* Ajuster la marge entre les éléments */
-            color: #4F772D; /* Couleur du texte pour la description, le prix et le stock */
-            text-align: left; /* Aligner le texte à gauche */
+            margin-bottom: 1rem; 
+            color: #4F772D; 
+            text-align: left;
         }
 
         .card-title {
-            color: #4F772D; /* Couleur du texte pour le titre (nom de la plante) */
-            text-align: left; /* Aligner le titre à gauche */
+            color: #4F772D;
+            text-align: left; 
         }
 
         .pagination {
-            justify-content: center; /* Centrer la pagination */
+            justify-content: center;
+
         }
     </style>
 </head>
 <body>
+    <header>
+        <nav style="height: 40px; background-color: white;">
+            <div class="logo" style="color:black">OPEP</div>
+        </nav>
+    </header>
     <section class="sec1">
         <div class="container text-center">
             <div class="row">
                 <div class="col" style="margin-top: 7vw;">
-                    <h1 class="text-left">
+                    <h1 class="text-left" style="color:white">
                         Grow Your Own <span style="color: #4F772D;">Favourite</span> plant
                     </h1>
-                    <p class="mb-4 opacity-70 text-left mt-2">
+                    <p class="mb-4 opacity-70 text-left mt-2" style="color:white">
                         We help you plant your first plant and create your own beautiful garden with our plant collection.
                     </p>
                     <button type="button" class="btn btn-block mb-4 btn-hover">
@@ -89,17 +101,51 @@ d<!DOCTYPE html>
             </div>
         </div>
     </section>
-
     <!-- ... ________________ ... -->
-    <section class="sec2">
+    <section class="sec2 d-flex justify-content-center mt-5">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" style="border:1px solid white; border-radius:20px; width:40%;">
+            <div class="container-fluid "style="dispaly:flex; gap:1.3vw">
+                <form method="get" action="" class="d-flex" role="search">
+                    <a class="navbar-brand" href="?view_all" style="color:white">View All</a>
+
+                    <select name="categorie" id="categorieSelect" style="border-radius: 5px; height:38px" onchange="submitForm()">
+                        <option value="all">Toutes les catégories</option>
+                        <?php
+                        $categoriesQuery = $conn->query("SELECT DISTINCT idCategorie, nomCategorie FROM categories");
+                        $categories = $categoriesQuery->fetch_all(MYSQLI_ASSOC);
+                        foreach ($categories as $category) {
+                            echo '<option value="' . $category['idCategorie'] . '">' . $category['nomCategorie'] . '</option>';
+                        }
+                        ?>
+                    </select>
+
+
+                </form>
+                <div class="d-flex "style="gap:1px">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                    <button class="btn btn-outline-success" type="button" onclick="searchPlants()">Search</button>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="sec3">
         <div class="container mt-5">
             <?php
-            include("traitement.php");
             $limit = 6;
             $page = isset($_GET['page']) ? $_GET['page'] : 1;
             $start = ($page - 1) * $limit;
 
-            $plantesQuery = $conn->query("SELECT * FROM plantes LIMIT $start, $limit");
+            // Vérifie si le formulaire est soumis
+            if (isset($_GET['view_all'])) {
+                $plantesQuery = $conn->query("SELECT * FROM plantes LIMIT $start, $limit");
+            } else {
+                // Récupère la catégorie sélectionnée
+                $categoryFilter = (isset($_GET['categorie']) && $_GET['categorie'] != 'all') ? "WHERE idCategorie = {$_GET['categorie']}" : "";
+
+                // Mettez à jour la requête pour inclure le filtre de catégorie
+                $plantesQuery = $conn->query("SELECT * FROM plantes $categoryFilter LIMIT $start, $limit");
+            }
+
             $counter = 0;
 
             while ($plante = $plantesQuery->fetch_assoc()) {
@@ -119,6 +165,16 @@ d<!DOCTYPE html>
                 echo '<p class="card-text mb-2"><strong>Price:</strong> <span style="color:black;">' . $plante['prix'] . 'DH </span></p>';
                 echo '<p class="card-text mb-2"><strong>Stock:</strong> <span style="color:black;">' . $plante['stock'] . '</span></p>';
                 echo '</div>';
+                echo '<div class="d-flex justify-content-center">';
+                echo '<button class="btn btn-success panier-btn mt-2" data-plant-id="' . $plante['idPlante'] . '">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-cart-plus" viewBox="0 0 16 16">
+                    <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
+                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                </svg>
+                Ajouter
+            </button>';
+            echo '</div>';
+        
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
@@ -136,7 +192,7 @@ d<!DOCTYPE html>
             ?>
         </div>
 
-        <!-- ... (Pagination existante) ... -->
+        <!-- ... (Pagination) ... -->
 
         <?php
         $result = $conn->query("SELECT COUNT(idPlante) AS total FROM plantes");
@@ -152,5 +208,15 @@ d<!DOCTYPE html>
         echo '</nav>';
         ?>
     </section>
+    <script>
+    function submitForm() {
+        document.getElementById('categorieSelect').form.submit();
+    }
+        function searchPlants() {
+        document.getElementById('categorieSelect').form.submit();
+    }
+    </script>
+    
 </body>
 </html>
+

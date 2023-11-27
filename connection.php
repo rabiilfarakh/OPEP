@@ -11,7 +11,7 @@ if (isset($_POST['submitConn'])) {
         $query = "SELECT r.nomRole
         FROM utilisateurs u
         JOIN roles r ON u.idUtl = r.idUtl
-        WHERE u.emailUtl = '$emailConn' AND u.mdpUtl = '$mdpConn'";
+        WHERE u.emailUtl = '$emai lConn' AND u.mdpUtl = '$mdpConn'";
         $result = $conn->query($query);
 
         if ($result->num_rows > 0) {
@@ -50,7 +50,7 @@ if (isset($_POST['submitConn'])) {
     <title>Document</title>
 </head>
 
-<body style="background-color: #31572C ">
+<body style="background-color: #132A13 ">
     <section class="sec1 ">
         <div class="overlay" id="overlay"></div>
         <!-- Section: Design Block -->
@@ -85,7 +85,7 @@ if (isset($_POST['submitConn'])) {
                                 </div>
 
                                 <!-- Submit button -->
-                                <button type="submit" name="submitConn" id="submitConnBtn" class="btn btn-block mb-4" style="color:white; background-color: #31572C;" onclick="validateAndSubmitConnForm()">
+                                <button type="submit" name="submitConn" id="submitConnBtn" class="btn btn-block mb-4" style="color:white; background-color: #132A13;" onclick="validateAndSubmitConnForm()">
                                     Se connecter
                                 </button>
 

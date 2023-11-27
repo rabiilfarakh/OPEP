@@ -11,7 +11,7 @@ if (isset($_POST['submitInsc'])) {
     $mdp = $_POST["mdpInsc"];
     
     if (!empty($email) && !empty($mdp) && !empty($nom) && !empty($prenom)) {
-        $query = "INSERT INTO utilisateurs (emailUtl,mdpUtl,nomUtl,prenomUtl) VALUES ('$email','$mdp','$nom','$prenom')";
+        $query = "INSERT INTO utilisateurs ( emailUtl,mdpUtl,nomUtl,prenomUtl) VALUES ('$email','$mdp','$nom','$prenom')";
         $result = $conn->query($query);
         if($result){
             $lastUserId = $conn->insert_id;
@@ -38,7 +38,7 @@ if (isset($_POST['submitInsc'])) {
     <title>Document</title>
 </head>
 
-<body style="background-color: #31572C ">
+<body style="background-color: #132A13 ">
     <section class="sec1 ">
         <div class="overlay" id="overlay"></div>
         <!-- Section: Design Block -->
@@ -83,7 +83,7 @@ if (isset($_POST['submitInsc'])) {
                                 </div>
 
                                 <!-- Submit button -->
-                                <button type="submit" name="submitInsc" id="submitInsc" class="btn btn-block mb-4" style="background-color: #31572C; color:white" >
+                                <button type="submit" name="submitInsc" id="submitInsc" class="btn btn-block mb-4" style="background-color: #132A13; color:white" >
                                     S'inscrire
                                 </button>
 
