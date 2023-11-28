@@ -3,22 +3,34 @@
 include("traitement.php") ;
 
 //-------------------------------- Connection-----------------------------------------
+$tabl=array();
 if (isset($_POST['submitConn'])) {
+
+    session_start();
     $emailConn = $_POST["emailConn"];
     $mdpConn = $_POST["mdpConn"];
 
     if (!empty($emailConn) && !empty($mdpConn)) {
-        $query = "SELECT r.nomRole
+        $query = "SELECT r.nomRole , u.idUtl
         FROM utilisateurs u
         JOIN roles r ON u.idUtl = r.idUtl
-        WHERE u.emailUtl = '$emai lConn' AND u.mdpUtl = '$mdpConn'";
+        WHERE u.emailUtl = '$emailConn' AND u.mdpUtl = '$mdpConn'";
         $result = $conn->query($query);
 
+    
+        
+       
         if ($result->num_rows > 0) {
-            // Récupérer directement le rôle
-            $nomRole = $result->fetch_assoc()['nomRole'];
+            $rests=$result->fetch_assoc();
+            foreach($rests as $rest){
+                $tabl[]=$rest;
+            }
+            
+            $_SESSION['idUtl']=$tabl[1];
+            $nomRole = $tabl[0];
+            
+           
 
-            // Rediriger en fonction du rôle
             if ($nomRole == "client") {
                 header("Location: client.php");
             } else if ($nomRole == "admin") {
@@ -71,6 +83,7 @@ if (isset($_POST['submitConn'])) {
                 <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
                     <div class="card bg-glass" style="width: 28vw;">
                         <div class="card-body px-4 py-5 px-md-5">
+                        
 
                             <!-- --------------------------------------------------Form_Connection -------------------------------------------->
                             <form method="POST" id="inscriptionForm">
